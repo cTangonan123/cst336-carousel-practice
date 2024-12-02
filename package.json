@@ -1,0 +1,27 @@
+{
+  "name": "cst336-carousel-practice",
+  "version": "1.0.0",
+  "description": "practice with bootstraps caroussel to see if SSR can allow randomizing of source images.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.mjs",
+    "server": "nodemon index.mjs",
+    "build-css": "sass public/css/style.scss public/css/style.css",
+    "watch-css": "sass --watch public/css/style.scss public/css/style.css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "mysql2": "^3.11.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7",
+    "sass": "^1.81.0"
+  }
+}
