@@ -30,7 +30,7 @@ app.get('/searchResults', async (req, res) => {
   fetch(url, options)
     .then(res => res.json())
     .then(json => {
-      console.log(json);
+      // console.log(json);
       res.render('searchResults', { results: json.results });
     }) // where you do stuff
     .catch(err => console.error(err));
@@ -38,8 +38,9 @@ app.get('/searchResults', async (req, res) => {
   // res.render('searchResults');
 })
 
-app.post('/watchlist', (req, res) => {
+app.post('/watchlist', async (req, res) => {
   console.log(req.body.movie_id);
+  const movie_id = req.body.movie_id;
   // check if movie is already in database
   // if not, add it
   const url = `https://api.themoviedb.org/3/movie/${movie_id}?language=en-US`;
@@ -56,7 +57,7 @@ app.post('/watchlist', (req, res) => {
     .then(json => console.log(json)) // where to do stuff
     .catch(err => console.error(err));
 
-  res.json({ message: 'Movie added to watchlist' });
+  res.json({ message: 'Movie added to your watchlist' });
 });
 
 app.listen(port, () => {
