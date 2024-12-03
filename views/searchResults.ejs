@@ -166,14 +166,14 @@
 </div>
 <!-- Modal -->
  <!-- Button trigger modal -->
- <button
+ <!-- <button
   type="button"
   class="btn btn-primary btn-lg"
   data-bs-toggle="modal"
   data-bs-target="#reviewModal"
  >
   Launch demo modal
- </button>
+ </button> -->
  
  <!-- Modal -->
  <div
@@ -202,7 +202,7 @@
           <div class="container-fluid">
               <div class="row">
                 <div class="col col-12">
-                  <input type="hidden" name="userId" id="rUserId"> <!-- userId value needs to be included on render of page -->
+                  <input type="hidden" name="userId" id="rUserId" value="1"> <!-- userId value needs to be included on render of page -->
                   <input type="hidden" name="movieId" id="rMovieId"> <!-- movieId value needs to be included dynamically upon click -->
                 </div>
               </div>
@@ -265,7 +265,7 @@
   </div>
  </div>
  
- <script>
+ <!-- <script>
   var modalId = document.getElementById('modalId');
  
   modalId.addEventListener('show.bs.modal', function (event) {
@@ -276,7 +276,7 @@
  
     // Use above variables to manipulate the DOM
   });
- </script>
+ </script> -->
  
 
 <script src="/js/searchResults.js"></script>

@@ -95,6 +95,28 @@ app.post('/watchlist', async (req, res) => {
   res.json({ message: 'Movie added to your watchlist' });
 });
 
+app.post('/submitReview', async (req, res) => {
+  console.log(req.body);
+  // getting the values from the form
+  const { movie_id, user_id, title, rating, review } = req.body;
+  
+  // inserting the values into the database
+  // TODO: check first if the user has already submitted a review for this movie
+  // if they have, update the review instead of inserting a new one
+  let sql = `INSERT INTO reviews (movie_id, user_id, title, rating, review) VALUES (?, ?, ?, ?, ?)`;
+  await conn.query(sql, [movie_id, user_id, title, rating, review])
+    .then(() => console.log('Review submitted!'))
+    .catch(err => console.error(err));
+    
+  // inserting movie to the watchlist when review is submitted.
+  let sqlWatchList = `INSERT INTO watchlist (movie_id, user_id) VALUES (?, ?)`;
+  await conn.query(sqlWatchList, [movie_id, user_id])
+    .then(() => console.log('Movie added to watchlist!'))
+    .catch(err => console.error(err));
+  
+  res.json({ message: 'Review submitted!' });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

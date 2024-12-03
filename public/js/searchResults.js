@@ -56,8 +56,9 @@ document.querySelector("#reviewModal").addEventListener('submit', async(e) => {
   }
 
   // send fetch request
-  // TODO: add post request /review to index.mjs
-  await fetch('/review', {
+  // TODO: add post request /submitReview to index.mjs
+  // TODO: add toasts for success
+  await fetch('/submitReview', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -71,6 +72,7 @@ document.querySelector("#reviewModal").addEventListener('submit', async(e) => {
     })
     .catch((error) => {
       console.error('Error:', error);
+      alert("Error: " + error)
     });
   console.log(movie_id, user_id, title, rating, review)
   // close
