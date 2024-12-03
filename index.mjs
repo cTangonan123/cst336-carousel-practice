@@ -24,7 +24,7 @@ const pool = mysql.createPool({                   // Create a pool to connect to
 const conn = await pool.getConnection();          // Get a connection from the pool
 
 app.get('/', (req, res) => {
-  res.render('index');
+  res.render('index', { pageTitle: "Home", user_id: 1 });
 });
 
 app.get('/searchResults', async (req, res) => {
@@ -44,11 +44,30 @@ app.get('/searchResults', async (req, res) => {
     .then(res => res.json())
     .then(json => {
       // console.log(json);
-      res.render('searchResults', { results: json.results });
+      res.render('searchResults', { results: json.results, pageTitle: "Search Results" , user_id: 1});
     }) // where you do stuff
     .catch(err => console.error(err));
 
   // res.render('searchResults');
+})
+
+// how to pass the user_id to the profile page
+
+app.get('/profile/:user_id', async(req, res) => {
+  const user_id = req.params.user_id;
+  let sql = `
+    SELECT * FROM user 
+    LEFT JOIN reviews ON user.id = reviews.user_id
+    LEFT JOIN movie ON reviews.movie_id = movie.id
+    WHERE user.id = ?`;
+  let rows = await conn.query(sql, [user_id])
+    .then(([rows]) => {
+      console.log(rows);
+      res.render('profile', { pageTitle: "Profile", user_id: user_id, results: rows });
+    })
+    .catch(err => console.error(err));
+  
+  // res.render('profile', { pageTitle: "Profile", user_id: user_id });
 })
 
 app.post('/watchlist', async (req, res) => {
