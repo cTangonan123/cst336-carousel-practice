@@ -64,6 +64,7 @@
         <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
           <ol class="carousel-indicators">
             <%for (let i = 0; i < results.length; i++) {%>
+              
               <li
                 data-bs-target="#carouselId"
                 data-bs-slide-to="<%= i %>"
@@ -115,7 +116,7 @@
       <div class="col-12 col-md-6 col-lg-4 overflow-auto" style="max-height:90vh">
   <% for (let i = 0; i < results.length; i++) { %>
     
-    <div class="card text-start mb-2">
+    <div class="card text-start mb-2" data-movie-id="<%=results[i].id%>">
       <img class="card-img-top" src="https://image.tmdb.org/t/p/w154<%=results[i].backdrop_path%>" alt="Title" />
       <div class="card-body">
         <h4 class="card-title"><%=results[i].title%></h4>
@@ -140,10 +141,11 @@
             <div class="col col-6">
               <a
                 name=""
-                id=""
+                id="writeReview"
                 class="btn btn-primary w-100"
                 href="#"
                 role="button"
+                data-movie-id=<%=results[i].id%>
                 >
                 <i class="bi bi-file-earmark-text"></i>
                 Review
@@ -162,6 +164,120 @@
 </div>
 </div>
 </div>
+<!-- Modal -->
+ <!-- Button trigger modal -->
+ <button
+  type="button"
+  class="btn btn-primary btn-lg"
+  data-bs-toggle="modal"
+  data-bs-target="#reviewModal"
+ >
+  Launch demo modal
+ </button>
+ 
+ <!-- Modal -->
+ <div
+  class="modal fade"
+  id="reviewModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalTitleId"
+  aria-hidden="true"
+ >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitleId">
+          Write Review
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="#">
+          <div class="container-fluid">
+              <div class="row">
+                <div class="col col-12">
+                  <input type="hidden" name="userId" id="rUserId"> <!-- userId value needs to be included on render of page -->
+                  <input type="hidden" name="movieId" id="rMovieId"> <!-- movieId value needs to be included dynamically upon click -->
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-floating mb-3 col-8">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="rTitle"
+                    id="rTitle"
+                    placeholder="Title"
+                    required
+                  />
+                  <label for="rTitle">Title</label>
+                </div>
+                <div class="form-floating mb-3 col-4">
+                  <input
+                    type="number"
+                    class="form-control"
+                    name="rRating"
+                    id="rRating"
+                    placeholder="0"
+                    min="0"
+                    max="10"
+                    required
+                  />
+                  <label for="rRating">Rating</label>
+                </div>
+                
+              </div>
+              <div class="row">
+                <div class="col col-12">
+                  <div class="form-group">
+                    <label for="review">Review</label>
+                    <textarea
+                      class="form-control"
+                      name="rReview"
+                      id="rReview"
+                      rows="3"
+                      placeholder="Write your review here"
+                      required
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+            >
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary rBtnSave">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+ </div>
+ 
+ <script>
+  var modalId = document.getElementById('modalId');
+ 
+  modalId.addEventListener('show.bs.modal', function (event) {
+      // Button that triggered the modal
+      let button = event.relatedTarget;
+      // Extract info from data-bs-* attributes
+      let recipient = button.getAttribute('data-bs-whatever');
+ 
+    // Use above variables to manipulate the DOM
+  });
+ </script>
+ 
 
 <script src="/js/searchResults.js"></script>
 </body>
