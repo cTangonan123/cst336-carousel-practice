@@ -23,7 +23,22 @@ const pool = mysql.createPool({                   // Create a pool to connect to
 
 const conn = await pool.getConnection();          // Get a connection from the pool
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
+  let sql = `SELECT movie_id from watchlist WHERE user_id = 1`;
+  let rows = await conn.query(sql)
+    .then(([rows]) => {
+      console.log(rows);
+      /* TODO: incorporate this into the searchResults.ejs to check if a result is in watchlist */
+      let ids = new Set(rows.map(row => row.movie_id));
+      console.log(ids);
+      console.log(ids.has(272)) // should be true
+      console.log(ids.has(550)) // should be false
+
+      
+    })
+    .catch(err => console.error(err));
+
+
   res.render('index', { pageTitle: "Home", user_id: 1 });
 });
 
@@ -73,6 +88,8 @@ app.get('/profile/:user_id', async(req, res) => {
 app.post('/watchlist', async (req, res) => {
   console.log(req.body.movie_id);
   const movie_id = req.body.movie_id;
+
+  
   // check if movie is already in database
   // if not, add it
   let sql = `SELECT * FROM movie WHERE id = ?`;
