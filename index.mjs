@@ -56,10 +56,10 @@ app.get('/searchResults', async (req, res) => {
 app.get('/profile/:user_id', async(req, res) => {
   const user_id = req.params.user_id;
   let sql = `
-    SELECT * FROM user 
-    LEFT JOIN reviews ON user.id = reviews.user_id
-    LEFT JOIN movie ON reviews.movie_id = movie.id
-    WHERE user.id = ?`;
+    with r as (SELECT user.id as user_id, user.user_name, user.is_admin, user.password, reviews.id as reviews_id, reviews.movie_id, reviews.title as reviews_title, reviews.review, reviews.rating FROM user 
+    LEFT JOIN reviews ON user_id = reviews.user_id
+    WHERE user.id = ?)
+    select * from r left join movie on r.movie_id = movie.id;`;
   let rows = await conn.query(sql, [user_id])
     .then(([rows]) => {
       console.log(rows);
@@ -122,6 +122,43 @@ app.post('/submitReview', async (req, res) => {
   // inserting the values into the database
   // TODO: check first if the user has already submitted a review for this movie
   // if they have, update the review instead of inserting a new one
+  // check if movie is already in database
+  // if not, add it
+  let sqlMovie = `SELECT * FROM movie WHERE id = ?`;
+  const [rows] = await conn.query(sqlMovie, [movie_id]);
+  
+
+  const url = `https://api.themoviedb.org/3/movie/${movie_id}?language=en-US`;
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${process.env.TMDB_READ_ACCESS_TOKEN}`
+    }
+  };
+
+  let result = await fetch(url, options)
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      return data;
+      
+    }) // where to do stuff
+    .catch(err => console.error(err));
+
+  // where we add the movie to the database if it isn't already in there
+  if (rows.length === 0) {
+    let sql = `INSERT INTO movie (
+      id, title, release_date, overview, backdrop_path, poster_path, vote_average
+    ) VALUES (
+      ?, ?, ?, ?, ?, ?, ?
+    )`;
+    await conn.query(sql, [result.id, result.title, result.release_date, result.overview, result.backdrop_path, result.poster_path, result.vote_average]);
+  }
+
+
+
+
   let sql = `INSERT INTO reviews (movie_id, user_id, title, rating, review) VALUES (?, ?, ?, ?, ?)`;
   await conn.query(sql, [movie_id, user_id, title, rating, review])
     .then(() => console.log('Review submitted!'))
